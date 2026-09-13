@@ -139,7 +139,7 @@ const Register = () => {
           headers: {
             "Content-Type": "application/json",
           },
-        })
+        });
         setNomManquand(false);
         setPrenomManquand(false);
         setEmailManquand(false);
