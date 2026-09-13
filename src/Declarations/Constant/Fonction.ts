@@ -1,4 +1,3 @@
-import axios from "axios";
 import { URL } from "./constant";
 import type { ChatMessage, Contacttype } from "../Types/typage";
 import api from "../Api";
@@ -6,16 +5,8 @@ import api from "../Api";
 
 
 
-const access_token = localStorage.getItem("access_token")
 export const accessToken = localStorage.getItem("access_token")
-const getAuthHeaders = () => {
-  if (typeof window === "undefined") {
-    return {};
-  }
 
-  const accessToken = localStorage.getItem("access_token");
-  return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
-};
 export function Nombre_aleatoire(min:number, max:number) {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
@@ -32,18 +23,14 @@ export const Identifiant_Parent = 'ITP'
 
 export const ObtenirList = async (setListe:React.Dispatch<React.SetStateAction<any[]>>,setDonnees:React.Dispatch<React.SetStateAction<any[]>>,classe:string)=>{
            try {
-            const res = await axios.get(`${URL}/api/classes/${classe}`,{
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            })
+            const res = await api.get(`${URL}/api/classes/${classe}`)
             const data = res.data.eleves
             setListe(data)
            } catch (error) {
             console.error(error)
            }
            try {
-            const resp = await axios.get(`${URL}/api/enseignant/classes/`)
+            const resp = await api.get(`${URL}/api/enseignant/classes/`)
                 setDonnees(resp.data.classes)
                 console.log(resp.data.classes)
             } catch (error) {
@@ -53,17 +40,11 @@ export const ObtenirList = async (setListe:React.Dispatch<React.SetStateAction<a
 export const sendAbsenceList = async (items: any[]) => {
   if (!items.length) return;
 
-  await axios.post(
+  await api.post(
     `${URL}/api/absences/`,
     { 
       absences: items 
-    },
-    { 
-      headers: {
-            Authorization: `Bearer ${access_token}`,
-            "Content-Type": "application/json",
-          }, 
-      }
+    }
   );
 };
 
@@ -76,24 +57,19 @@ export const sendMultipleFiles = async (files: File[], endpoint: string, fieldNa
     formData.append(fieldName, file, file.name);
   });
 
-  await axios.post(`${URL}${endpoint}`, formData, {
-    headers: {
-      Authorization: `Bearer ${access_token}`
-    },
-  })
+  await api.post(`${URL}${endpoint}`, formData)
 }
 
 export const sendRetardList = async (items: any[]) => {
   if (!items.length) return;
 
-  await axios.post(
+  await api.post(
     `${URL}/api/retards/`,
     { 
       retards: items 
     },
     { 
       headers: {
-      Authorization: `Bearer ${access_token}`,
       "Content-Type": "application/json",
     },
    }
@@ -101,11 +77,7 @@ export const sendRetardList = async (items: any[]) => {
 }
 export const fetchAbsenceHistory = async () => {
   try {
-    const response = await axios.get(`${URL}/api/absences/`, {
-      headers: {
-      Authorization: `Bearer ${access_token}`
-    },
-    });
+    const response = await api.get(`${URL}/api/absences/`);
     return response.data?.results ?? response.data ?? [];
   } catch (error) {
     console.error("Erreur historique absences :", error);
@@ -115,11 +87,7 @@ export const fetchAbsenceHistory = async () => {
 
 export const fetchRetardHistory = async () => {
   try {
-    const response = await axios.get(`${URL}/api/retards/`, {
-      headers: {
-      Authorization: `Bearer ${access_token}`
-    },
-    });
+    const response = await api.get(`${URL}/api/retards/`);
     return response.data?.results ?? response.data ?? [];
   } catch (error) {
     console.error("Erreur historique retards :", error);
@@ -135,10 +103,7 @@ export const fetchDevoirHistory = async () => {
 
   for (const endpoint of endpoints) {
     try {
-      const response = await axios.get(endpoint, {
-        headers: getAuthHeaders(),
-      });
-
+      const response = await api.get(endpoint);
       return response.data?.results ?? response.data ?? [];
     } catch (error) {
       console.warn(`Endpoint de devoirs indisponible: ${endpoint}`, error);
@@ -180,9 +145,7 @@ export const fetchParentChildrenNotes = async () => {
 
   for (const endpoint of endpoints) {
     try {
-      const response = await axios.get(endpoint, {
-        headers: getAuthHeaders(),
-      });
+      const response = await api.get(endpoint);
 
       const data = response.data;
       const payload = data?.results ?? data?.children ?? data?.eleves ?? data?.notes ?? data;
