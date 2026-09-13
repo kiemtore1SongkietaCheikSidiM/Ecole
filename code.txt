@@ -1,0 +1,73 @@
+import axios from "axios";
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const password = "MotDePasse123"; // ou généré côté frontend
+  const role = fonction; // "ENSEIGNANT" ou "PARENT"
+
+  if (role === "Enseignant") {
+    const payload = {
+      username: `ens_${Date.now()}`,
+      nom: Nom,
+      prenom: prenom,
+      email: email,
+      telephone: tel,
+      password: password,
+      role: "ENSEIGNANT",
+      classe: classe.map((item) => ({
+        classe: item.classe,
+        matiere: item.matiere,
+      })),
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/auth/register/",
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Inscription enseignant :", response.data);
+    } catch (error: any) {
+      console.error("Erreur inscription enseignant :", error.response?.data || error);
+    }
+  }
+
+  if (role === "Parent") {
+    const payload = {
+      username: `parent_${Date.now()}`,
+      nom: Nom,
+      prenom: prenom,
+      email: email,
+      telephone: tel,
+      password: password,
+      role: "PARENT",
+      eleve: eleve.map((item) => ({
+        Nom: item.Nom,
+        Prenom: item.Prenom,
+        Classe: item.Classe,
+      })),
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/auth/register/",
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Inscription parent :", response.data);
+    } catch (error: any) {
+      console.error("Erreur inscription parent :", error.response?.data || error);
+    }
+  }
+};
