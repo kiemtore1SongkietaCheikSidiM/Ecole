@@ -34,7 +34,7 @@ const Classe = ({ index, eleve, setEleve,fonction, classe, setClasse }: { index:
     <div>
         <select onChange={handleChange} value={fonction === "Parent" ? eleve[index].Classe : classe[index].classe}
                 className="block w-full rounded-md  px-3 py-1.5
-                text-3xl border text-slate-600 font-bold  outline-1 -outline-offset-1 outline-white/10
+                text-3xl border text-slate-600 dark:text-slate-200 font-bold  outline-1 -outline-offset-1 outline-white/10
                 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2
                 focus:outline-indigo-500 sm:text-sm/6">
                     <option value="">Sélectionner une classe</option>

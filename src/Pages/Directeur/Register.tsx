@@ -165,7 +165,7 @@ const Register = () => {
     }
   };
   return (
-    <div className="bg-slate-100 dark:border-slate-800 overflow-x-hidden">
+    <div className="bg-slate-100 dark:border-slate-800 dark:bg-slate-800 overflow-x-hidden">
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2
@@ -302,7 +302,7 @@ const Register = () => {
               <div className="mt-2">
                 <select
                   className="block w-full rounded-md  px-3 py-1.5
-                 text-3xl border text-slate-600 font-bold  outline-1 -outline-offset-1 outline-white/10
+                 text-3xl border text-slate-600 dark:text-slate-200 font-bold  outline-1 -outline-offset-1 outline-white/10
                   placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2
                    focus:outline-indigo-500 sm:text-sm/6"
                   id="fonction"
@@ -420,7 +420,7 @@ const Register = () => {
                 <button
                   onClick={AjouterClasse}
                   type="button"
-                  className="mt-2 border bg-slate-200 cursor-pointer font-bold"
+                  className="mt-2 border bg-slate-200 cursor-pointer font-bold dark:bg-slate-800"
                 >
                   Ajouter une classe
                 </button>
