@@ -1,0 +1,46 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.3.6 Chrome/140.0.7339.249 Electron/38.8.0 Safari/537.36" version="29.3.6">
+  <diagram name="Page-1" id="kIb16TVKQLOG-Pq3DzyI">
+    <mxGraphModel dx="1042" dy="626" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="WHW9D2yfij6PbCUy7fTp-5" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="Admin" vertex="1">
+          <mxGeometry height="200" width="160" x="20" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="WHW9D2yfij6PbCUy7fTp-6" parent="WHW9D2yfij6PbCUy7fTp-5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;div&gt;+id:int&lt;/div&gt;+ Nom: String&lt;div&gt;+Prenom:string&lt;/div&gt;&lt;div&gt;+Email:String&lt;/div&gt;&lt;div&gt;+Numero:int&lt;/div&gt;&lt;div&gt;+Adresse:int&lt;/div&gt;" vertex="1">
+          <mxGeometry height="94" width="160" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="WHW9D2yfij6PbCUy7fTp-7" parent="WHW9D2yfij6PbCUy7fTp-5" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="160" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="WHW9D2yfij6PbCUy7fTp-8" parent="WHW9D2yfij6PbCUy7fTp-5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="Ajouter_bulletins:void()&lt;div&gt;Modifier_les donnees:void()&lt;/div&gt;&lt;div&gt;Gerer_son profil:void()&lt;/div&gt;&lt;div&gt;Communiquer:void()&lt;/div&gt;" vertex="1">
+          <mxGeometry height="72" width="160" y="128" as="geometry" />
+        </mxCell>
+        <mxCell id="WHW9D2yfij6PbCUy7fTp-9" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="Parent" vertex="1">
+          <mxGeometry height="220" width="160" x="310" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="WHW9D2yfij6PbCUy7fTp-10" parent="WHW9D2yfij6PbCUy7fTp-9" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;div&gt;+id:int&lt;/div&gt;+ Nom: String&lt;div&gt;+Prenom:string&lt;/div&gt;&lt;div&gt;+Email:String&lt;/div&gt;&lt;div&gt;+Numero:int&lt;/div&gt;&lt;div&gt;+Adresse:int&lt;/div&gt;&lt;div&gt;+Enfant:ForeignKeys&lt;/div&gt;" vertex="1">
+          <mxGeometry height="114" width="160" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="WHW9D2yfij6PbCUy7fTp-11" parent="WHW9D2yfij6PbCUy7fTp-9" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="160" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="WHW9D2yfij6PbCUy7fTp-12" parent="WHW9D2yfij6PbCUy7fTp-9" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="Consulter_bulletin:void()&lt;div&gt;Gerer_son profil:void()&lt;/div&gt;&lt;div&gt;Communiquer:void()&lt;/div&gt;" vertex="1">
+          <mxGeometry height="72" width="160" y="148" as="geometry" />
+        </mxCell>
+        <mxCell id="WHW9D2yfij6PbCUy7fTp-13" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="Enseignant" vertex="1">
+          <mxGeometry height="220" width="190" x="610" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="WHW9D2yfij6PbCUy7fTp-14" parent="WHW9D2yfij6PbCUy7fTp-13" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;div&gt;+id:int&lt;/div&gt;+ Nom: String&lt;div&gt;+Prenom:string&lt;/div&gt;&lt;div&gt;+Email:String&lt;/div&gt;&lt;div&gt;+Numero:int&lt;/div&gt;&lt;div&gt;+Adresse:int&lt;/div&gt;&lt;div&gt;+Classes:string&lt;/div&gt;" vertex="1">
+          <mxGeometry height="114" width="190" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="WHW9D2yfij6PbCUy7fTp-15" parent="WHW9D2yfij6PbCUy7fTp-13" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="190" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="WHW9D2yfij6PbCUy7fTp-16" parent="WHW9D2yfij6PbCUy7fTp-13" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="Ajouter_retard_absences:void()&lt;div&gt;Modifier_les donnees:void()&lt;/div&gt;&lt;div&gt;Gerer_son profil:void()&lt;/div&gt;&lt;div&gt;Communiquer:void()&lt;/div&gt;" vertex="1">
+          <mxGeometry height="72" width="190" y="148" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

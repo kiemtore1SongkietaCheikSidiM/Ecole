@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Handjet:wght,ELSH@100..900,2&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tagesschrift&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Prociono&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+@theme {
+    --font-playfair : "Playfair Display",sans-serif;
+}
+@theme {
+    --font-lora:"Lora";
+}
+@theme {
+    --font-handjet: "Handjet"
+}
+@theme {
+    --font-tag:"Tagesschrift"
+}
+@theme {
+    --font-pro:"Prociono"
+}
