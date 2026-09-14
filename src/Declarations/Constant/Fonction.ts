@@ -1,5 +1,5 @@
 import { URL } from "./constant";
-import type { ChatMessage, Contacttype } from "../Types/typage";
+import type { ChatMessage, Contacttype, Usertype } from "../Types/typage";
 import api from "../Api";
 
 
@@ -256,3 +256,11 @@ export const MessageCount = async (notificationId: number,setMessageCount:React.
       setMessageCount(response.data.message_count);
     } catch (error) {}
   };
+  export const userInfo = async (setUser:React.Dispatch<React.SetStateAction<Usertype | undefined>>) => {
+      try {
+        const resp = await api.get("api/auth/me/");
+        setUser(resp.data);
+      } catch (error: any) {
+        console.log(error.response?.data);
+      }
+    };

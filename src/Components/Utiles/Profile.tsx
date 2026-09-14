@@ -1,16 +1,21 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { URL } from "../../Declarations/Constant/constant"
 import api from "../../Declarations/Api"
+import type{ Usertype } from "../../Declarations/Types/typage"
+import { userInfo } from "../../Declarations/Constant/Fonction"
 
 const access_token = localStorage.getItem("access_token")
 const Profile = () => {
     const [changer,setChanger] = useState<boolean>(false)
-    const user = JSON.parse(localStorage.getItem("user") || "{}")
+    const [user,setUser] = useState<Usertype>()
     const [nom,setNom] = useState<string>("")
     const [prenom,setPrenom] = useState<string>("")
     const [email,setEmail] = useState<string>("")
     const [telephone,setTelephone] = useState<string>("")
     const [file,setFile]=  useState<File[]>([])
+    useEffect(()=>{
+        userInfo(setUser) 
+    },[])
     const handleFileSet = (e:React.ChangeEvent<HTMLInputElement>)=>{
         if(e.target.files){
             const selectedFiles = Array.from(e.target.files)
@@ -83,7 +88,7 @@ const Profile = () => {
                             {changer ? <input value={nom} onChange={(e)=>setNom(e.target.value)}
                             type="text" className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm "/>:
                             <span className="block w-full ">
-                                {user.nom}
+                                {user?.nom}
                             </span>
                             }
                         </div>
@@ -97,7 +102,7 @@ const Profile = () => {
                             {changer ? <input value={prenom} onChange={(e)=>setPrenom(e.target.value)}
                             type="text" className="block w-full rounded-md border-gray-300 shadow-sm "/>:
                             <span className="block w-full dark:text-white">
-                                {user.prenom}
+                                {user?.prenom}
                             </span>
                             }
                         </div>
@@ -111,7 +116,7 @@ const Profile = () => {
                             {changer ? <input value={email} onChange={(e)=>setEmail(e.target.value)}
                             type="text" className="block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm "/>:
                             <span className="block w-full ">
-                                {user.email}
+                                {user?.email}
                             </span>
                             }
                         </div>
@@ -125,7 +130,7 @@ const Profile = () => {
                             {changer ? <input value={telephone} onChange={(e)=>setTelephone(e.target.value)}
                             type="text" className="block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm "/>:
                             <span className="block w-full ">
-                                {user.telephone}
+                                {user?.telephone}
                             </span>
                             }
                         </div>
@@ -137,7 +142,7 @@ const Profile = () => {
                         </label>
                         <div className="mt-1 flex rounded-md shadow-sm">
                             <span className="block w-full">
-                                {user.role}
+                                {user?.role}
                             </span>
                         </div>
                     </div>

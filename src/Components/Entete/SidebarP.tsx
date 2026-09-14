@@ -3,9 +3,15 @@ import type { Search } from "../../Declarations/Types";
 import { MenuItemParent } from "../../Declarations/Constant";
 import { CgProfile } from "react-icons/cg";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import type { Usertype } from "../../Declarations/Types/typage";
+import { userInfo } from "../../Declarations/Constant/Fonction";
 
-const user = JSON.parse(localStorage.getItem("user") || "{}");
 const SidebarP = ({ sidebarcollaps }: Search) => {
+    const [user, setUser] = useState<Usertype>();
+  useEffect(()=>{
+    userInfo(setUser)
+  },[])
   const navigate = useNavigate();
   return (
     <aside
@@ -92,10 +98,10 @@ const SidebarP = ({ sidebarcollaps }: Search) => {
           {sidebarcollaps && (
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-slate-800 dark:text-white">
-                {user.nom}
+                {user?.nom}
               </p>
               <p className="truncate text-sm text-slate-500 dark:text-slate-400">
-                {user.prenom}
+                {user?.prenom}
               </p>
             </div>
           )}

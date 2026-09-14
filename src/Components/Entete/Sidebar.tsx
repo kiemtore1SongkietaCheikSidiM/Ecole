@@ -3,12 +3,17 @@ import { TfiWorld } from "react-icons/tfi";
 import { useNavigate } from "react-router-dom";
 import { MenuItemDirecteur } from "../../Declarations/Constant";
 import type { Search } from "../../Declarations/Types";
+import { useEffect, useState } from "react";
+import type { Usertype } from "../../Declarations/Types/typage";
+import { userInfo } from "../../Declarations/Constant/Fonction";
 
 // function for logout to stop the session in firebase
-const user = JSON.parse(localStorage.getItem("user") || "{}");
 const Sidebar = ({ sidebarcollaps }: Search) => {
+  const [user, setUser] = useState<Usertype>();
   const navigate = useNavigate();
-
+  useEffect(() => {
+    userInfo(setUser);
+  }, []);
   return (
     <aside
       className={`flex h-screen flex-col border-r border-slate-200/70 bg-white/85 shadow-lg shadow-slate-200 
@@ -98,10 +103,10 @@ const Sidebar = ({ sidebarcollaps }: Search) => {
           {sidebarcollaps && (
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-slate-800 dark:text-white">
-                {user.nom}
+                {user?.nom}
               </p>
               <p className="truncate text-sm text-slate-500 dark:text-slate-400">
-                {user.prenom}
+                {user?.prenom}
               </p>
             </div>
           )}

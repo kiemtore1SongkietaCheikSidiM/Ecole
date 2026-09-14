@@ -70,3 +70,10 @@ export type EleveType = {
   Prenom:string
   Classe:string
 }
+export type Usertype = {
+  role:string
+  nom:string
+  prenom:string
+  email:string
+  telephone:string
+}
