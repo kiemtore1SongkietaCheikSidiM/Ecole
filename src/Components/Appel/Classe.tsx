@@ -9,7 +9,6 @@ const Classe = ({ index, eleve, setEleve,fonction, classe, setClasse }: { index:
     const Appel = async ()=>{
         try{
             const response = await api.get(`/api/classes/options/`)
-            console.log(response.data)
             setDonnees(response.data.classes)
         }catch(error){
             console.log("Erreur lors de la récupération des données:", error);

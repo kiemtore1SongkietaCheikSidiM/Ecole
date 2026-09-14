@@ -1,19 +1,15 @@
-import React, { useState } from "react";
-import {
-  Identifiant_Enseignant,
-  Identifiant_Parent,
-  Mot_de_passe_aleatoire,
-  Nombre_aleatoire,
-} from "../../Declarations/Constant/Fonction";
 import Classe from "../../Components/Appel/Classe";
 import Matiere from "../../Components/Appel/Matiere";
-import { URL } from "../../Declarations/Constant/constant";
-import api from "../../Declarations/Api";
+import { TfiClose } from "react-icons/tfi";
+import type { EleveType, classetype } from "../../Declarations/Types/typage";
+import React, { useState } from "react";
+import { handleSubmit } from "../../Declarations/Constant/Register";
 
 const Register = () => {
   const [fonction, setfonction] = useState<string>("");
   const [Nom, setNom] = useState<string>("");
   const [prenom, setPrenom] = useState<string>("");
+  const [succes, setSucces] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [tel, setTel] = useState<string>("");
   const [nommanquand, setNomManquand] = useState<boolean>(false);
@@ -21,13 +17,13 @@ const Register = () => {
   const [emailmanquand, setEmailManquand] = useState<boolean>(false);
   const [telmanquand, setTelManquand] = useState<boolean>(false);
   const [fonctionmanquand, setFonctionManquand] = useState<boolean>(false);
-  const [classe, setClasse] = useState([
+  const [classe, setClasse] = useState<classetype[]>([
     {
       classe: "",
       matiere: "",
     },
   ]);
-  const [eleve, setEleve] = useState([
+  const [eleve, setEleve] = useState<EleveType[]>([
     {
       Nom: "",
       Prenom: "",
@@ -54,119 +50,23 @@ const Register = () => {
       },
     ]);
   };
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (Nom === "") {
-      setNomManquand(true);
-    }
-    if (prenom === "") {
-      setPrenomManquand(true);
-    }
-    if (email === "") {
-      setEmailManquand(true);
-    }
-    if (tel === "") {
-      setTelManquand(true);
-    }
-    if (fonction === "" || fonction === "Choississez une fonction") {
-      setFonctionManquand(true);
-    }
-    const password = Mot_de_passe_aleatoire(12);
-    if (fonction === "Enseignant") {
-      const username =
-        Identifiant_Enseignant +
-        Nombre_aleatoire(10000000000, 99999999999) +
-        2026;
-      const formData = {
-        username,
-        nom: Nom,
-        prenom,
-        email,
-        telephone: tel,
-        password,
-        role: "ENSEIGNANT",
-        classe: classe.map((item) => ({
-          classe: item.classe,
-          matiere: item.matiere,
-        })),
-      };
-      try {
-        await api.post(`${URL}/api/auth/register/`, formData, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        setNomManquand(false);
-        setPrenomManquand(false);
-        setEmailManquand(false);
-        setTelManquand(false);
-        setFonctionManquand(false);
-        setNom("");
-        setPrenom("");
-        setEmail("");
-        setTel("");
-        setClasse([
-          {
-            classe: "",
-            matiere: "",
-          },
-        ]);
-      } catch (error: any) {
-        console.log(
-          "Ca na pas reussit",
-          error.response?.data?.message || error.message,
-        );
-      }
-    } else if (fonction === "Parent") {
-      const username =
-        Identifiant_Parent + Nombre_aleatoire(10000000000, 99999999999) + 2026;
-      const formData = {
-        username,
-        nom: Nom,
-        prenom,
-        email,
-        telephone: tel,
-        password,
-        role: "PARENT",
-        eleve: eleve.map((item) => ({
-          nom: item.Nom,
-          prenom: item.Prenom,
-          classe: item.Classe,
-        })),
-      };
-      try {
-        await api.post(`${URL}/api/auth/register/`, formData, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        setNomManquand(false);
-        setPrenomManquand(false);
-        setEmailManquand(false);
-        setTelManquand(false);
-        setFonctionManquand(false);
-        setNom("");
-        setPrenom("");
-        setEmail("");
-        setTel("");
-        setEleve([
-          {
-            Nom: "",
-            Prenom: "",
-            Classe: "",
-          },
-        ]);
-      } catch (error: any) {
-        console.error(
-          "Ca na pas reussit",
-          error.response?.data?.message || error.message,
-        );
-      }
-    }
-  };
+
   return (
     <div className="bg-slate-100 dark:border-slate-800 dark:bg-slate-800 overflow-x-hidden">
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+        {succes && (
+          <div className="mt-10">
+            <div className="flex justify-between rounded-xl py-4 px-8 bg-green-300 shadow-lg text-gray-900 dark:text-slate-200 max-w-xl mx-auto">
+              <p>Formulaire envoye avec success</p>
+              <span
+                className="hover:cursor-pointer font-bold"
+                onClick={() => setSucces(false)}
+              >
+                <TfiClose className="w-4 h-4" />
+              </span>
+            </div>
+          </div>
+        )}
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2
             className="mt-10 text-center 
@@ -427,7 +327,42 @@ const Register = () => {
               </div>
             )}
             <button
-              onClick={handleSubmit}
+              onClick={(e: React.FormEvent) => {
+                e.preventDefault();
+                handleSubmit({
+                  Nom,
+                  prenom,
+                  email,
+                  tel,
+                  fonction,
+
+                  succes,
+                  nommanquand,
+                  prenommanquand,
+                  emailmanquand,
+                  telmanquand,
+                  fonctionmanquand,
+
+                  setfonction,
+                  setNom,
+                  setPrenom,
+                  setEmail,
+                  setTel,
+                  setSucces,
+
+                  setNomManquand,
+                  setPrenomManquand,
+                  setEmailManquand,
+                  setTelManquand,
+                  setFonctionManquand,
+
+                  classe,
+                  setClasse,
+
+                  eleve,
+                  setEleve,
+                });
+              }}
               className="text-3xl border text-slate-800 cursor-pointer rounded-lg bg-blue-500 m-5 hover:bg-blue-700"
             >
               Envoyer

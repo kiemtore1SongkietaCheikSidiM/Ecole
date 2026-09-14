@@ -7,6 +7,7 @@ import { FaBell, FaSchool } from "react-icons/fa";
 import { FaMessage } from "react-icons/fa6";
 import { accessToken, MessageCount } from "../../Declarations/Constant/Fonction";
 import api from "../../Declarations/Api";
+import type { NotificationItem, NotificationsResponse } from "../../Declarations/Types/Interface";
 
 const Notification = () => {
   const [activepanel, setActivePanel] = useState<Panel>(null);

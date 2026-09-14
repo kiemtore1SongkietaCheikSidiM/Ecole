@@ -61,3 +61,12 @@ export type BulletinRecord = {
 };
 
 export type TrimesterKey = "Premier trimestre" | "Deuxieme Trimestre" | "Troisieme trimestre"
+export type classetype = {
+  classe:string
+  matiere:string
+}
+export type EleveType = {
+  Nom:string
+  Prenom:string
+  Classe:string
+}
