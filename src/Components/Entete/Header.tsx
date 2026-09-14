@@ -4,14 +4,17 @@ import Recherche from "./Recherche"
 import type { Search } from "../../Declarations/Types"
 import { useEffect, useState } from "react"
 import Notification from "./Notification"
+import type { Usertype } from "../../Declarations/Types/typage"
+import { userInfo } from "../../Declarations/Constant/Fonction"
 
-const user = JSON.parse(localStorage.getItem("user") || "{}")
 const Header = ({ontoggle,sidebarcollaps}:Search) => {
+    const [user,setUser]=useState<Usertype>()
     const defaultState : string = localStorage.getItem('theme') || 'light'
     const [theme, setTheme] = useState<string>(defaultState)
     useEffect(()=>{
         localStorage.setItem('theme', theme)
         document.documentElement.classList.toggle('dark', theme === 'dark')
+        userInfo(setUser)
     },[theme])
     const handleButton = () => {
     setTheme((current)=>current ==="light"? "dark":"light");
@@ -39,7 +42,7 @@ const Header = ({ontoggle,sidebarcollaps}:Search) => {
                         <h1 
                         className="truncate text-lg font-black text-slate-800 dark:text-white 
                         sm:text-xl lg:text-2xl italic font-playfair">
-                            Bienvenue{" Mr "} {user.nom}
+                            Bienvenue{" Mr "} {user?.nom}
                         </h1>
                     </div>
             </div>
