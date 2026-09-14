@@ -32,7 +32,6 @@ export const ObtenirList = async (setListe:React.Dispatch<React.SetStateAction<a
            try {
             const resp = await api.get(`${URL}/api/enseignant/classes/`)
                 setDonnees(resp.data.classes)
-                console.log(resp.data.classes)
             } catch (error) {
                 console.log(error)
             }

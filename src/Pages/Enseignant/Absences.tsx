@@ -56,7 +56,7 @@ const Absences = () => {
   };
   return (
     <div className=" block dark:bg-slate-800">
-      <div className="underline text-center m-5 text-4xl sm:text-5xl">
+      <div className="text-center m-5 text-4xl sm:text-5xl">
         <h1>Ajouter une absence</h1>
       </div>
       <div className="grid grid-cols-4 mt-4 text-3xl sm:text-4xl">
@@ -84,11 +84,7 @@ const Absences = () => {
             <select
               name="eleve"
               id="eleve"
-              value={
-                selectedStudent
-                  ? `${selectedStudent.Nom} ${selectedStudent.Prenom}`
-                  : ""
-              }
+              value={selectedStudent?.Nom + ""+ selectedStudent?.Prenom}
               onChange={(e) => {
                 const selected = Liste.find(
                   (item) => `${item.nom} ${item.prenom}` === e.target.value,
