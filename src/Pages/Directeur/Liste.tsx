@@ -24,7 +24,6 @@ const Liste = () => {
         })
         setListParent(resp.data.parents)
         setListEleve(resp.data.eleves)
-        console.log(resp.data.eleves)
         setListEnseignant(resp.data.enseignants)
         } catch (error:any) {
             console.log(error.response?.data)
