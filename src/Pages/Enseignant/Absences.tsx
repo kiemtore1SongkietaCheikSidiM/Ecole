@@ -84,11 +84,12 @@ const Absences = () => {
             <select
               name="eleve"
               id="eleve"
-              value={selectedStudent?.Nom + ""+ selectedStudent?.Prenom}
+              value={`${selectedStudent?.Nom ?? ""} ${selectedStudent?.Prenom ?? ""}`.trim()}
               onChange={(e) => {
                 const selected = Liste.find(
                   (item) => `${item.nom} ${item.prenom}` === e.target.value,
                 );
+
                 if (selected) {
                   setSelectedStudent({
                     Nom: selected.nom,
@@ -101,7 +102,7 @@ const Absences = () => {
             >
               <option value="">Selectionner</option>
               {Liste?.map((item) => (
-                <option value={item.nom} key={item.id}>
+                <option value={`${item.nom} ${item.prenom}`} key={item.id}>
                   {item.nom} {item.prenom}
                 </option>
               ))}
