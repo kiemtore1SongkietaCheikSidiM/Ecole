@@ -9,55 +9,55 @@ import type { eleves } from "../../Declarations/Types/constant";
 
 const Absences = () => {
   const [classes, setClasse] = useState<string>("");
-    const [minutes, setMinute] = useState<string>("");
-    const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-    const [Liste, setListe] = useState<eleves[]>([]);
-    const [todo, setTodo] = useState<Todet[]>([]);
-    const [donnees, setDonnees] = useState<bonne[]>([]);
-    const date = new Date().toISOString().split("T")[0];
-  
+  const [minutes, setMinute] = useState<string>("");
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  const [Liste, setListe] = useState<eleves[]>([]);
+  const [todo, setTodo] = useState<Todet[]>([]);
+  const [donnees, setDonnees] = useState<bonne[]>([]);
+  const date = new Date().toISOString().split("T")[0];
+
   useEffect(() => {
-      ObtenirList(setListe, setDonnees, classes);
-    }, [classes]);
+    ObtenirList(setListe, setDonnees, classes);
+  }, [classes]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
-      if (!todo.length) return;
-  
-      try {
-        const retards = todo.map((item) => ({
-          eleve_id: item.eleve,
-          date: item.date,
-          motif: item.motif,
-        }));
-        await sendAbsenceList(retards);
-        setTodo([]);
-      } catch (error: any) {
-        console.error(error);
-        console.error(error.response?.data);
-      }
-    };
+    e.preventDefault();
+    if (!todo.length) return;
+
+    try {
+      const retards = todo.map((item) => ({
+        eleve_id: item.eleve,
+        date: item.date,
+        motif: item.motif,
+      }));
+      await sendAbsenceList(retards);
+      setTodo([]);
+    } catch (error: any) {
+      console.error(error);
+      console.error(error.response?.data);
+    }
+  };
   const AddTodo = () => {
-      if (!classes.trim() || !selectedStudent || !minutes.trim()) {
-        return;
-      }
-  
-      const data: Todet = {
-        id: Date.now(),
-        eleve: selectedStudent.id,
-        classe: classes,
-        Nom: selectedStudent.Nom,
-        Prenom: selectedStudent.Prenom,
-        minutes: Number(minutes),
-        date,
-        motif: "Absence",
-      };
-  
-      setTodo((prev) => [...prev, data]);
-  
-      setSelectedStudent(null);
-      setMinute("");
+    if (!classes.trim() || !selectedStudent || !minutes.trim()) {
+      return;
+    }
+
+    const data: Todet = {
+      id: Date.now(),
+      eleve: selectedStudent.id,
+      classe: classes,
+      Nom: selectedStudent.Nom,
+      Prenom: selectedStudent.Prenom,
+      minutes: Number(minutes),
+      date,
+      motif: "Absence",
     };
+
+    setTodo((prev) => [...prev, data]);
+
+    setSelectedStudent(null);
+    setMinute("");
+  };
 
   const supp = (id: number) => {
     setTodo((prev) => prev.filter((item) => item.id !== id));
@@ -100,7 +100,7 @@ const Absences = () => {
 
                 if (selected) {
                   setSelectedStudent({
-                    id:selected.id,
+                    id: selected.id,
                     Nom: selected.nom,
                     Prenom: selected.prenom,
                   });
