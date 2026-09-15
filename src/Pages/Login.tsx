@@ -39,8 +39,8 @@ const Login = () => {
         } else if (user.role === "ADMIN") {
           navigate("/Directeur");
         }
-      } catch (error) {
-        console.log("Ca a refuser petit", error);
+      } catch (error:any) {
+        console.log(error.response?.data);
       } finally {
         setLoading(false);
       }
