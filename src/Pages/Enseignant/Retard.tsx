@@ -1,16 +1,22 @@
 import type React from "react";
-import SelectClasse from "../../Components/Layout/SelectClasse";
-import { useState } from "react";
-import type { Student, Todet } from "../../Declarations/Types";
-import Select from "react-select";
-import { Eleve5eme, TimeLine } from "../../Declarations/Constant";
-import { sendRetardList } from "../../Declarations/Constant/Fonction";
+import { useEffect, useState } from "react";
+import type { bonne, Student, Todet } from "../../Declarations/Types";
+import { TimeLine } from "../../Declarations/Constant";
+import { ObtenirList, sendRetardList } from "../../Declarations/Constant/Fonction";
+import type { eleves } from "../../Declarations/Types/constant";
 
 const Retard = () => {
-  const [classe, setClasse] = useState<string>("");
-  const [nom, setNom] = useState<Student | null>(null);
+  const [classes, setClasse] = useState<string>("");
   const [heure, setheure] = useState<string>("");
+    const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  
+    const [Liste, setListe] = useState<eleves[]>([]);
+  
   const [todo, setTodo] = useState<Todet[]>([]);
+    const [donnees, setDonnees] = useState<bonne[]>([]);
+  useEffect(() => {
+      ObtenirList(setListe, setDonnees, classes);
+    }, []);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!todo.length) return;
@@ -23,47 +29,79 @@ const Retard = () => {
       setTodo([]);
     }
   };
-  const AddTodo = () => {
-    if (
-      !classe.trim() &&
-      !nom?.Nom.trim() &&
-      !nom?.Prenom.trim() &&
-      !heure.trim()
-    ) {
-      return;
-    }
-    const Data: Todet = {
-      id: Date.now(),
-      classe: classe,
-      Nom: nom?.Nom,
-      Prenom: nom?.Prenom,
-      heure: heure,
-    };
-    setTodo((prev) => [...prev, Data]);
-  };
+   const AddTodo = () => {
+       if (
+         !classes.trim() ||
+         !selectedStudent?.Nom?.trim() ||
+         !selectedStudent?.Prenom?.trim() ||
+         !heure.trim()
+       ) {
+         return;
+       }
+   
+       const Data: Todet = {
+         id: Date.now(),
+         classe: classes,
+         Nom: selectedStudent.Nom,
+         Prenom: selectedStudent.Prenom,
+         heure: heure,
+       };
+       setTodo((prev) => [...prev, Data]);
+     };
   const supp = (id: number) => {
     setTodo((prev) => prev.filter((item) => item.id !== id));
   };
   return (
     <div className=" block dark:bg-black">
-      <div className="underline text-center m-5 text-4xl sm:text-5xl">
+      <div className="text-center m-5 text-4xl sm:text-5xl">
         <h1>Ajouter un retard</h1>
       </div>
       <div className="grid grid-cols-4 mt-4 text-3xl sm:text-4xl">
         <div className="m-2 mr-5 ">
-          <SelectClasse clace={classe} setClasse={setClasse} />
+          <select
+              name=""
+              id=""
+              value={classes}
+              onChange={(e) => setClasse(e.target.value)}
+            >
+              <option value="" className="text-2xl">
+                Selectionne
+              </option>
+              {donnees.map((items) => (
+                <option value={items.nom} key={items.id}>
+                  {items.nom}
+                </option>
+              ))}
+            </select>
         </div>
         <div className="m-2 ml-1 ">
           <div>
-            <Select<Student>
-              value={nom}
-              onChange={setNom}
-              options={Eleve5eme}
-              getOptionLabel={(option) => option.Nom + " " + option.Prenom}
-              getOptionValue={(option) => option.Prenom}
-              isSearchable
-              placeholder="Nom et Prenom"
-            />
+            <select
+              name="eleve"
+              id="eleve"
+              value={`${selectedStudent?.Nom ?? ""} ${selectedStudent?.Prenom ?? ""}`.trim()}
+              onChange={(e) => {
+                const selected = Liste.find(
+                  (item) => `${item.nom} ${item.prenom}` === e.target.value,
+                );
+
+                if (selected) {
+                  setSelectedStudent({
+                    Nom: selected.nom,
+                    Prenom: selected.prenom,
+                  });
+                } else {
+                  setSelectedStudent(null);
+                }
+              }}
+            >
+              <option value="">Selectionner</option>
+              {Liste?.map((item) => (
+                <option value={`${item.nom} ${item.prenom}`} key={item.id}>
+                  {item.nom} {item.prenom}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         <div className="m-2 ml-1">
