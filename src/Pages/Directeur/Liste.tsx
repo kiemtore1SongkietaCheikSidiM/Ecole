@@ -24,21 +24,20 @@ const Liste = () => {
         })
         setListParent(resp.data.parents)
         setListEleve(resp.data.eleves)
+        console.log(resp.data.eleves)
         setListEnseignant(resp.data.enseignants)
         } catch (error:any) {
-            console.log("message d'erreur",error)
+            console.log(error.response?.data)
         }
         try {
             const resp = await api.get(`${URL}/api/classes/options/`)
             setDonnees(resp.data.classes)
-            console.log(resp.data.classes)
-        } catch (error) {
-            console.log(error)
+        } catch (error:any) {
+            console.log(error.response?.data)
         }
     }
     useEffect(()=>{
         Appel()
-        console.log(classe)
     },[])
   return (
     <div className="antialiased font-sans bg-gray-200 dark:bg-gray-800">
@@ -50,7 +49,7 @@ const Liste = () => {
                             <select value={list} onChange={(e)=>setList(e.target.value)}
                             className="h-full rounded-l border block appearance-none w-full bg-white dark:bg-black border-gray-400 dark:border-gray-700 dark:text-gray-50 text-gray-700 py-2 px-4 pr-8 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                                 <option>Enseignant</option>
-                                <option>Elèves</option>
+                                <option>Eleves</option>
                                 <option>Parent</option>
                             </select>
                             <div
