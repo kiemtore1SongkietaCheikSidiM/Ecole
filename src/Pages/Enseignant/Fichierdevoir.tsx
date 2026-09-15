@@ -5,36 +5,27 @@ import api from "../../Declarations/Api"
 
 
 
-const access_token = localStorage.getItem("access_token")
 const Fichierdevoir = () => {
-  const [file,setFile] = useState<File[]>([])
-  const [selected,setSelected] = useState<boolean>(false)
-  const date = new Date().toLocaleDateString("fr-FR",{
-        day:"numeric",
-        month:"long",
-        year:"numeric"
-    })
-  const handleClick = (e:React.FormEvent)=>{
-      e.preventDefault()
-      const formData = new FormData()
-      try {
-        if (file) {
-            file.forEach((file)=>{
-                formData.append("devoirs",file)
-            })
-        formData.append("date",date)
-        }
-        api.post(`${URL}/api/devoirs/scanner/`,formData,{
-            headers: {
-                  Authorization: `Bearer ${access_token}`,
-                    },
-        })
-      } catch (error:any) {
-        console.log(error.response?.data)
-      }
-      finally{
+    const [file,setFile] = useState<File[]>([])
+    const [selected,setSelected] = useState<boolean>(false)
+    const date = new Date().toISOString().split("T")[0];
+    const handleClick =async  (e:React.FormEvent)=>{
+        e.preventDefault()
+        const formData = new FormData()
+        try {
+            if (file) {
+                file.forEach((file)=>{
+                    formData.append("devoirs",file)
+                })
+            formData.append("date",date)
+            }
+            await api.post(`${URL}/api/devoirs/scanner/`,formData,               
+        )
         setFile([])
-      }
+        } 
+        catch (error:any) {
+            console.log(error.response?.data)
+        }
   }
   return (
     <div>
