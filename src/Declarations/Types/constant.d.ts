@@ -28,7 +28,7 @@ export type LEnseign = {
 }
 export type eleves=
         {
-        id:string
+        id:number
         nom:string
         prenom:string
         classe:string

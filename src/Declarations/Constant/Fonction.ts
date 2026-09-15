@@ -4,7 +4,12 @@ import api from "../Api";
 
 
 
-
+const dateFoncton = new Date()
+export const date = dateFoncton.toLocaleDateString("fr-FR",{
+  day:"numeric",
+  month:'long',
+  year:"numeric"
+})
 export const accessToken = localStorage.getItem("access_token")
 
 export function Nombre_aleatoire(min:number, max:number) {

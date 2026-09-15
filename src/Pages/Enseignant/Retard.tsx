@@ -10,46 +10,54 @@ import type { eleves } from "../../Declarations/Types/constant";
 
 const Retard = () => {
   const [classes, setClasse] = useState<string>("");
-  const [heure, setheure] = useState<string>("");
+  const [minutes, setMinute] = useState<string>("");
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-
   const [Liste, setListe] = useState<eleves[]>([]);
-
   const [todo, setTodo] = useState<Todet[]>([]);
   const [donnees, setDonnees] = useState<bonne[]>([]);
+  const date = new Date().toISOString().split("T")[0];
+
   useEffect(() => {
     ObtenirList(setListe, setDonnees, classes);
-  }, []);
+  }, [classes]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!todo.length) return;
 
     try {
-      await sendRetardList(todo);
-    } catch (error) {
-      console.error(error);
-    } finally {
+      const absence = todo.map((item) => ({
+        eleve_id: item.eleve,
+        minutes: item.minutes,
+        date: item.date,
+        motif: item.motif,
+      }));
+      await sendRetardList(absence);
       setTodo([]);
+    } catch (error: any) {
+      console.error(error);
+      console.error(error.response?.data);
     }
   };
   const AddTodo = () => {
-    if (
-      !classes.trim() ||
-      !selectedStudent?.Nom?.trim() ||
-      !selectedStudent?.Prenom?.trim() ||
-      !heure.trim()
-    ) {
+    if (!classes.trim() || !selectedStudent || !minutes.trim()) {
       return;
     }
 
-    const Data: Todet = {
+    const data: Todet = {
       id: Date.now(),
+      eleve: selectedStudent.id,
       classe: classes,
       Nom: selectedStudent.Nom,
       Prenom: selectedStudent.Prenom,
-      heure: heure,
+      minutes: Number(minutes),
+      date,
+      motif: "retard",
     };
-    setTodo((prev) => [...prev, Data]);
+
+    setTodo((prev) => [...prev, data]);
+
+    setSelectedStudent(null);
+    setMinute("");
   };
   const supp = (id: number) => {
     setTodo((prev) => prev.filter((item) => item.id !== id));
@@ -90,6 +98,7 @@ const Retard = () => {
 
                 if (selected) {
                   setSelectedStudent({
+                    id: selected.id,
                     Nom: selected.nom,
                     Prenom: selected.prenom,
                   });
@@ -99,11 +108,13 @@ const Retard = () => {
               }}
             >
               <option value="">Selectionner</option>
-              {Liste?.map((item) => (
-                <option value={`${item.nom} ${item.prenom}`} key={item.id}>
-                  {item.nom} {item.prenom}
-                </option>
-              ))}
+              {Liste?.map((item) => {
+                return (
+                  <option value={`${item.nom} ${item.prenom}`} key={item.id}>
+                    {item.nom} {item.prenom}
+                  </option>
+                );
+              })}
             </select>
           </div>
         </div>
@@ -111,8 +122,8 @@ const Retard = () => {
           <select
             name=""
             id=""
-            value={heure}
-            onChange={(e) => setheure(e.target.value)}
+            value={minutes}
+            onChange={(e) => setMinute(e.target.value)}
           >
             {TimeLine.map((items, index) => (
               <option value={items.Temps} key={index}>
@@ -148,10 +159,9 @@ const Retard = () => {
                 >
                   <td className="p-3 px-5">{todo.classe}</td>
                   <td className="p-3 px-5">
-                    {todo.Nom} {todo.Prenom}
+                    {todo.Nom} {todo?.Prenom}
                   </td>
-                  <td className="p-3 px-5">{todo.heure}</td>
-                  <td className="p-3 px-5">{todo.heure}</td>
+                  <td className="p-3 px-5">{todo.minutes}</td>
                   <td>
                     <button
                       onClick={() => supp(todo.id)}

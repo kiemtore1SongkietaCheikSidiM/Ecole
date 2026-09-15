@@ -8,48 +8,56 @@ import {
 import type { eleves } from "../../Declarations/Types/constant";
 
 const Absences = () => {
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [classes, setClasse] = useState<string>("");
-  const [donnees, setDonnees] = useState<bonne[]>([]);
-  const [Liste, setListe] = useState<eleves[]>([]);
-  const [heure, setHeure] = useState<string>("");
-  const [todo, setTodo] = useState<Todet[]>([]);
-
+    const [minutes, setMinute] = useState<string>("");
+    const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+    const [Liste, setListe] = useState<eleves[]>([]);
+    const [todo, setTodo] = useState<Todet[]>([]);
+    const [donnees, setDonnees] = useState<bonne[]>([]);
+    const date = new Date().toISOString().split("T")[0];
+  
   useEffect(() => {
-    ObtenirList(setListe, setDonnees, classes);
-  }, []);
+      ObtenirList(setListe, setDonnees, classes);
+    }, [classes]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!todo.length) return;
-
-    try {
-      await sendAbsenceList(todo);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setTodo([]);
-    }
-  };
-  const AddTodo = () => {
-    if (
-      !classes.trim() ||
-      !selectedStudent?.Nom?.trim() ||
-      !selectedStudent?.Prenom?.trim() ||
-      !heure.trim()
-    ) {
-      return;
-    }
-
-    const Data: Todet = {
-      id: Date.now(),
-      classe: classes,
-      Nom: selectedStudent.Nom,
-      Prenom: selectedStudent.Prenom,
-      heure: heure,
+      e.preventDefault();
+      if (!todo.length) return;
+  
+      try {
+        const retards = todo.map((item) => ({
+          eleve_id: item.eleve,
+          date: item.date,
+          motif: item.motif,
+        }));
+        await sendAbsenceList(retards);
+        setTodo([]);
+      } catch (error: any) {
+        console.error(error);
+        console.error(error.response?.data);
+      }
     };
-    setTodo((prev) => [...prev, Data]);
-  };
+  const AddTodo = () => {
+      if (!classes.trim() || !selectedStudent || !minutes.trim()) {
+        return;
+      }
+  
+      const data: Todet = {
+        id: Date.now(),
+        eleve: selectedStudent.id,
+        classe: classes,
+        Nom: selectedStudent.Nom,
+        Prenom: selectedStudent.Prenom,
+        minutes: Number(minutes),
+        date,
+        motif: "Absence",
+      };
+  
+      setTodo((prev) => [...prev, data]);
+  
+      setSelectedStudent(null);
+      setMinute("");
+    };
 
   const supp = (id: number) => {
     setTodo((prev) => prev.filter((item) => item.id !== id));
@@ -92,6 +100,7 @@ const Absences = () => {
 
                 if (selected) {
                   setSelectedStudent({
+                    id:selected.id,
                     Nom: selected.nom,
                     Prenom: selected.prenom,
                   });
@@ -113,8 +122,8 @@ const Absences = () => {
           <select
             name=""
             id=""
-            value={heure}
-            onChange={(e) => setHeure(e.target.value)}
+            value={minutes}
+            onChange={(e) => setMinute(e.target.value)}
           >
             {TimeLine.map((items, index) => (
               <option value={items.Temps} key={index}>
@@ -152,8 +161,7 @@ const Absences = () => {
                   <td className="p-3 px-5">
                     {todo.Nom} {todo.Prenom}
                   </td>
-                  <td className="p-3 px-5">{todo.heure}</td>
-                  <td className="p-3 px-5">{todo.heure}</td>
+                  <td className="p-3 px-5">{todo.minutes}</td>
                   <td>
                     <button
                       onClick={() => supp(todo.id)}

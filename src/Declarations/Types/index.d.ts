@@ -72,6 +72,7 @@ export type genere = {
     path:string
 }
 export type Student = {
+    id:number
     Nom:string
     Prenom:string
 }
@@ -83,12 +84,15 @@ export type fonction = {
     max?:number
 }
 export type Todet = {
-  id:number
-  classe:string
-  Nom:string | undefined
-  Prenom:string | undefined
-  heure:string
-}
+  id: number;
+  eleve: number;
+  classe: string;
+  Nom: string;
+  Prenom: string;
+  minutes: number;
+  date: string;
+  motif: string;
+};
 export type Note = {
     Matiere:string
     Note:number
@@ -105,4 +109,5 @@ export type dataClaMa = {
 export type bonne ={
     id:number
     nom:string
+    classe:string
 } 
