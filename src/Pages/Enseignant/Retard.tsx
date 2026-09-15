@@ -2,21 +2,24 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import type { bonne, Student, Todet } from "../../Declarations/Types";
 import { TimeLine } from "../../Declarations/Constant";
-import { ObtenirList, sendRetardList } from "../../Declarations/Constant/Fonction";
+import {
+  ObtenirList,
+  sendRetardList,
+} from "../../Declarations/Constant/Fonction";
 import type { eleves } from "../../Declarations/Types/constant";
 
 const Retard = () => {
   const [classes, setClasse] = useState<string>("");
   const [heure, setheure] = useState<string>("");
-    const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  
-    const [Liste, setListe] = useState<eleves[]>([]);
-  
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+
+  const [Liste, setListe] = useState<eleves[]>([]);
+
   const [todo, setTodo] = useState<Todet[]>([]);
-    const [donnees, setDonnees] = useState<bonne[]>([]);
+  const [donnees, setDonnees] = useState<bonne[]>([]);
   useEffect(() => {
-      ObtenirList(setListe, setDonnees, classes);
-    }, []);
+    ObtenirList(setListe, setDonnees, classes);
+  }, []);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!todo.length) return;
@@ -29,25 +32,25 @@ const Retard = () => {
       setTodo([]);
     }
   };
-   const AddTodo = () => {
-       if (
-         !classes.trim() ||
-         !selectedStudent?.Nom?.trim() ||
-         !selectedStudent?.Prenom?.trim() ||
-         !heure.trim()
-       ) {
-         return;
-       }
-   
-       const Data: Todet = {
-         id: Date.now(),
-         classe: classes,
-         Nom: selectedStudent.Nom,
-         Prenom: selectedStudent.Prenom,
-         heure: heure,
-       };
-       setTodo((prev) => [...prev, Data]);
-     };
+  const AddTodo = () => {
+    if (
+      !classes.trim() ||
+      !selectedStudent?.Nom?.trim() ||
+      !selectedStudent?.Prenom?.trim() ||
+      !heure.trim()
+    ) {
+      return;
+    }
+
+    const Data: Todet = {
+      id: Date.now(),
+      classe: classes,
+      Nom: selectedStudent.Nom,
+      Prenom: selectedStudent.Prenom,
+      heure: heure,
+    };
+    setTodo((prev) => [...prev, Data]);
+  };
   const supp = (id: number) => {
     setTodo((prev) => prev.filter((item) => item.id !== id));
   };
@@ -59,20 +62,20 @@ const Retard = () => {
       <div className="grid grid-cols-4 mt-4 text-3xl sm:text-4xl">
         <div className="m-2 mr-5 ">
           <select
-              name=""
-              id=""
-              value={classes}
-              onChange={(e) => setClasse(e.target.value)}
-            >
-              <option value="" className="text-2xl">
-                Selectionne
+            name=""
+            id=""
+            value={classes}
+            onChange={(e) => setClasse(e.target.value)}
+          >
+            <option value="" className="text-2xl">
+              Selectionne
+            </option>
+            {donnees.map((items) => (
+              <option value={items.nom} key={items.id}>
+                {items.nom}
               </option>
-              {donnees.map((items) => (
-                <option value={items.nom} key={items.id}>
-                  {items.nom}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
         </div>
         <div className="m-2 ml-1 ">
           <div>
