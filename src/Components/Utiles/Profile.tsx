@@ -3,6 +3,8 @@ import { URL } from "../../Declarations/Constant/constant"
 import api from "../../Declarations/Api"
 import type{ Usertype } from "../../Declarations/Types/typage"
 import { userInfo } from "../../Declarations/Constant/Fonction"
+import ConfirmDialog from "./ConfirmDialog"
+import LoadingOverlay from "./LoadingOverlay"
 
 const access_token = localStorage.getItem("access_token")
 const Profile = () => {
@@ -13,6 +15,8 @@ const Profile = () => {
     const [email,setEmail] = useState<string>("")
     const [telephone,setTelephone] = useState<string>("")
     const [file,setFile]=  useState<File[]>([])
+    const [confirmOpen, setConfirmOpen] = useState(false)
+    const [loading, setLoading] = useState(false)
     useEffect(()=>{
         userInfo(setUser) 
     },[])
@@ -22,7 +26,9 @@ const Profile = () => {
             setFile(selectedFiles)
         }
     }
-    const handleSubmit =async ()=>{
+    const handleSubmit =()=> setConfirmOpen(true)
+    const handleConfirm =async ()=>{
+        setLoading(true)
         const formData = new FormData()
         formData.append("nom",nom)
         formData.append("prenom",prenom)
@@ -44,10 +50,16 @@ const Profile = () => {
             )
         } catch (error:any) {
             console.log(error.response?.data)
+        } finally {
+            setLoading(false)
+            setConfirmOpen(false)
+            setChanger(false)
         }
     }
   return (
     <div>
+             {loading && <LoadingOverlay label="Enregistrement du profil..." />}
+             <ConfirmDialog open={confirmOpen} title="Enregistrer les modifications ?" description="Les informations de votre profil seront mises à jour." busy={loading} onCancel={() => setConfirmOpen(false)} onConfirm={handleConfirm} confirmLabel="Enregistrer" />
        <div className="max-w-lg mx-auto bg-white dark:bg-black p-6 rounded-lg shadow-md">
            <div>
                 <div>

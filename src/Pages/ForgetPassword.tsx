@@ -2,23 +2,40 @@ import { useState } from "react";
 import Header from "../Components/Utiles/Header"
 import { URL } from "../Declarations/Constant/constant";
 import api from "../Declarations/Api";
+import ConfirmDialog from "../Components/Utiles/ConfirmDialog";
+import LoadingOverlay from "../Components/Utiles/LoadingOverlay";
 
 
 const ForgetPassword = () => {
     const [message, setMessage] = useState<boolean>(false);
     const [username,setUsername] = useState<string>("")
-    const handleSubmit = async ()=>{
+        const [confirmOpen, setConfirmOpen] = useState(false)
+        const [loading, setLoading] = useState(false)
+        const [error, setError] = useState(false)
+        const handleSubmit = (event: React.FormEvent)=>{
+            event.preventDefault()
+            if (username.trim()) setConfirmOpen(true)
+        }
+        const handleConfirm = async ()=>{
+            setLoading(true)
+            setError(false)
       try {
         await api.post(`${URL}/api/auth/forgot-password/`,username)
         setMessage(true)
       } catch (error:any) {
         console.error(error.response?.data)
+                setError(true)
+            } finally {
+                setLoading(false)
+                setConfirmOpen(false)
       }
     }
   return (
     <div>
         <Header/>
-        {message ? 
+                {loading && <LoadingOverlay label="Envoi de la demande..." />}
+                <ConfirmDialog open={confirmOpen} title="Envoyer la demande ?" description="Un e-mail de réinitialisation sera demandé pour cet identifiant." busy={loading} onCancel={() => setConfirmOpen(false)} onConfirm={handleConfirm} confirmLabel="Envoyer" />
+                        {message ? 
             <div className="text-center text-4xl m-4 p-4">
                 Un e-mail de réinitialisation a été envoyé  à votre Email
             </div>
@@ -43,7 +60,7 @@ const ForgetPassword = () => {
                                 Change
                             </button>
                         <div>
-                        {message && (
+                        {error && (
                             <div>
                                 Échec de l'envoi de l'e-mail. Veuillez réessayer.
                             </div>

@@ -9,11 +9,11 @@ import { handleAdminLogin } from "../Declarations/Constant/Admin";
 import Loading from "./../image/loading.gif";
 import api from "../Declarations/Api";
 
-
 const Login = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
   const navigate = useNavigate();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,8 +39,9 @@ const Login = () => {
         } else if (user.role === "ADMIN") {
           navigate("/Directeur");
         }
-      } catch (error:any) {
+      } catch (error: any) {
         console.log(error.response?.data);
+        setError(error.response?.data.message);
       } finally {
         setLoading(false);
       }
@@ -77,15 +78,19 @@ const Login = () => {
                     htmlFor=""
                     className="block text-sm/6 font-medium text-slate-700 dark:text-slate-200"
                   >
-                    Votre Nom d'utilisateur
+                    {error !== "" ? (
+                      <div className="text-red-400">Identifiant ou mot de passe incorrect</div>
+                    ) : (
+                      "Votre Nom d'utilisateur"
+                    )}
                   </label>
                   <div className="mt-2">
                     <input
                       type="text"
                       className="block w-full rounded-md  px-3 py-1.5
-                 text-3xl border text-slate-600 font-bold  outline-1 -outline-offset-1 outline-white/10
-                  placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2
-                   focus:outline-indigo-500 sm:text-sm/6"
+                      text-3xl border text-slate-600 dark:text-slate-300 font-bold  outline-1 -outline-offset-1 outline-white/10
+                    placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2
+                    focus:outline-indigo-500 sm:text-sm/6"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                     />
@@ -103,8 +108,9 @@ const Login = () => {
                     <div className="text-sm">
                       <Link
                         to="/oublie"
-                        className="font-semibold text-indigo-400 hover:text-indigo-300"
+                        className={`font-semibold ${error !== ""? "text-red-400 hover:text-red-50":"text-indigo-400 hover:text-indigo-300"} `}
                       >
+                        
                         Mot de passe oublie?
                       </Link>
                     </div>
@@ -113,7 +119,7 @@ const Login = () => {
                     <input
                       type="password"
                       className="block w-full rounded-md  px-3 py-1.5
-                 text-3xl border text-slate-600 font-bold  outline-1 -outline-offset-1 outline-white/10
+                 text-3xl border text-slate-600 dark:text-slate-300 font-bold  outline-1 -outline-offset-1 outline-white/10
                   placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2
                    focus:outline-indigo-500 sm:text-sm/6"
                       value={password}

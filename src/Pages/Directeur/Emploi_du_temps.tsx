@@ -1,6 +1,8 @@
 import { useState } from "react"
 import Ajout from "../../Components/Utiles/Ajout"
 import { sendMultipleFiles } from "../../Declarations/Constant/Fonction"
+import ConfirmDialog from "../../Components/Utiles/ConfirmDialog"
+import LoadingOverlay from "../../Components/Utiles/LoadingOverlay"
 
 
 
@@ -9,15 +11,23 @@ const Emploi_du_temps = () => {
     const nom = "emploi du temps"
     const [file,setFile] = useState<File[]>([])
     const [selected,setSelected] = useState<boolean>(false)
-    const handleClick = async (e:React.FormEvent)=>{
+    const [confirmOpen, setConfirmOpen] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const handleClick = (e:React.FormEvent)=>{
       e.preventDefault()
+      if (file.length) setConfirmOpen(true)
+    }
+    const handleConfirm = async ()=>{
       if (!file.length) return
+      setLoading(true)
       try {
         await sendMultipleFiles(file, "/api/emplois-du-temps/scanner/", "files")
       } catch (error:any) {
         console.log(error.response?.data)
       }
       finally{
+        setLoading(false)
+        setConfirmOpen(false)
         setFile([])
         setSelected(false)
       }
@@ -25,6 +35,8 @@ const Emploi_du_temps = () => {
   return (
     
     <div className="bg-gray-500 dark:bg-gray-200  sm:px-8 md:px-16 sm:py-8">
+        {loading && <LoadingOverlay label="Envoi de l'emploi du temps..." />}
+        <ConfirmDialog open={confirmOpen} title="Envoyer l'emploi du temps ?" description={`${file.length} fichier(s) seront transmis au serveur.`} busy={loading} onCancel={()=>setConfirmOpen(false)} onConfirm={handleConfirm} confirmLabel="Envoyer" />
         <main className="container mx-auto max-w-5xl h-full">
             <article
             aria-label="File Upload Modal"
@@ -33,7 +45,7 @@ const Emploi_du_temps = () => {
                 <Ajout file={file} setFile={setFile} selected={selected} setSelected={setSelected} nom={nom}/>
         
                 <footer className="flex justify-end px-8 pb-8 pt-4">
-                    <button onClick={handleClick}
+                    <button onClick={handleClick} disabled={loading || !file.length}
                         id="submit"
                         className="rounded-sm px-3 py-1 dark:bg-green-700 dark:hover:bg-green-500 bg-blue-700 hover:bg-blue-500 dark:text-black text-white focus:shadow-outline focus:outline-none"
                     >

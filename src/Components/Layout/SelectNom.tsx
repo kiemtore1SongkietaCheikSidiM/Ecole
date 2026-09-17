@@ -1,4 +1,3 @@
-import { Eleve5eme } from "../../Declarations/Constant";
 import Select from "react-select";
 import type { Student } from "../../Declarations/Types";
 type selection = {
@@ -12,7 +11,7 @@ const SelectNom = ({ nom, setNom }: selection) => {
       <Select<Student>
         value={nom}
         onChange={setNom}
-        options={Eleve5eme}
+        options={[]}
         getOptionLabel={(option) => option.Nom + " " + option.Prenom}
         getOptionValue={(option) => option.Prenom}
         isSearchable

@@ -1,2 +1,96 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+
+@layer components {
+	.ui-panel {
+		border: 1px solid var(--app-border);
+		border-radius: 1rem;
+		background: rgb(255 255 255 / 0.88);
+		box-shadow: 0 18px 45px rgb(15 23 42 / 0.08);
+		backdrop-filter: blur(14px);
+	}
+
+	.ui-input {
+		width: 100%;
+		min-height: 2.75rem;
+		border: 1px solid var(--app-border);
+		border-radius: 0.7rem;
+		background: var(--app-surface);
+		padding: 0.65rem 0.8rem;
+		color: var(--app-ink);
+		transition: border-color 160ms ease, box-shadow 160ms ease;
+	}
+
+	.ui-input:focus {
+		border-color: var(--app-primary);
+		box-shadow: 0 0 0 3px rgb(37 99 235 / 0.14);
+		outline: 0;
+	}
+
+	.ui-button {
+		display: inline-flex;
+		min-height: 2.75rem;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		border-radius: 0.7rem;
+		padding: 0.65rem 1rem;
+		font-weight: 700;
+		transition: transform 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+	}
+
+	.ui-button:hover:not(:disabled) {
+		transform: translateY(-1px);
+	}
+
+	.ui-button:disabled {
+		cursor: not-allowed;
+		opacity: 0.55;
+	}
+
+	.ui-button-primary {
+		background: var(--app-primary);
+		color: white;
+		box-shadow: 0 8px 18px rgb(37 99 235 / 0.2);
+	}
+
+	.ui-button-primary:hover:not(:disabled) {
+		background: var(--app-primary-dark);
+	}
+
+	.ui-button-danger {
+		background: var(--app-danger);
+		color: white;
+	}
+
+	.ui-button-quiet {
+		border: 1px solid var(--app-border);
+		background: white;
+		color: var(--app-ink);
+	}
+
+	.ui-loading {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.55rem;
+	}
+
+	.ui-spinner {
+		width: 1.1rem;
+		height: 1.1rem;
+		border: 2px solid currentColor;
+		border-right-color: transparent;
+		border-radius: 999px;
+		animation: ui-spin 700ms linear infinite;
+	}
+}
+
+@keyframes ui-spin {
+	to { transform: rotate(360deg); }
+}
+
+@media (max-width: 640px) {
+	.ui-button {
+		width: 100%;
+	}
+}

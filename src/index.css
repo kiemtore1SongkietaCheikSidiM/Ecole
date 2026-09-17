@@ -21,3 +21,93 @@
 @theme {
     --font-pro:"Prociono"
 }
+
+:root {
+    color: #172033;
+    background: #f3f6fb;
+    font-family: "Lora", Georgia, serif;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    --app-ink: #172033;
+    --app-muted: #667085;
+    --app-surface: #ffffff;
+    --app-border: #dce4ef;
+    --app-primary: #2563eb;
+    --app-primary-dark: #1d4ed8;
+    --app-accent: #0f766e;
+    --app-danger: #dc2626;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-width: 320px;
+    background: #f3f6fb;
+}
+
+body {
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
+    overflow-x: hidden;
+    color: var(--app-ink);
+    background:
+        radial-gradient(circle at 8% 0%, rgb(37 99 235 / 0.08), transparent 30rem),
+        linear-gradient(135deg, #f8fafc 0%, #eef4fb 100%);
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid rgb(37 99 235 / 0.35);
+    outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+    body {
+        background: #f8fafc;
+    }
+
+    table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    input,
+    select,
+    textarea {
+        max-width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

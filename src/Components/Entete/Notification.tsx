@@ -16,7 +16,6 @@ const Notification = () => {
   const [retard,setRetard] = useState<NotificationItem[]>([])
   const [devoir,setDevoir] = useState<NotificationItem[]>([])
   const [evenement,setEvenement] = useState<NotificationItem[]>([])
-  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [messageNotifications, setMessageNotifications] = useState<
     NotificationItem[]
   >([]);
@@ -35,17 +34,6 @@ const Notification = () => {
       );
 
       setNotificationCount(response.data.unread_count);
-      setNotifications((previous) =>
-        previous.map((notification) =>
-          notification.id === notificationId
-            ? {
-                ...notification,
-                is_clicked: true,
-                clicked_at: new Date().toISOString(),
-              }
-            : notification,
-        ),
-      );
     } catch (error: any) {
       console.error(error.response?.data || error.message);
     }
@@ -85,7 +73,6 @@ const Notification = () => {
         );
 
         const data = response.data;
-        setNotifications(data.notifications);
         setMessageNotifications(data.message_notifications);
         setNotificationCount(data.unread_count);
         setMessageCount(data.message_count);

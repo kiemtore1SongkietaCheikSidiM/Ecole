@@ -7,6 +7,8 @@ import {
   sendRetardList,
 } from "../../Declarations/Constant/Fonction";
 import type { eleves } from "../../Declarations/Types/constant";
+import ConfirmDialog from "../../Components/Utiles/ConfirmDialog";
+import LoadingOverlay from "../../Components/Utiles/LoadingOverlay";
 
 const Retard = () => {
   const [classes, setClasse] = useState<string>("");
@@ -15,14 +17,22 @@ const Retard = () => {
   const [Liste, setListe] = useState<eleves[]>([]);
   const [todo, setTodo] = useState<Todet[]>([]);
   const [donnees, setDonnees] = useState<bonne[]>([]);
+  const [confirmSend, setConfirmSend] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
   const date = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
     ObtenirList(setListe, setDonnees, classes);
   }, [classes]);
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (todo.length) setConfirmSend(true);
+  };
+
+  const handleConfirmSend = async () => {
     if (!todo.length) return;
+    setLoading(true);
 
     try {
       const absence = todo.map((item) => ({
@@ -36,6 +46,9 @@ const Retard = () => {
     } catch (error: any) {
       console.error(error);
       console.error(error.response?.data);
+    } finally {
+      setLoading(false);
+      setConfirmSend(false);
     }
   };
   const AddTodo = () => {
@@ -61,13 +74,17 @@ const Retard = () => {
   };
   const supp = (id: number) => {
     setTodo((prev) => prev.filter((item) => item.id !== id));
+    setPendingDelete(null);
   };
   return (
     <div className=" block dark:bg-black">
+      {loading && <LoadingOverlay label="Envoi des retards..." />}
+      <ConfirmDialog open={confirmSend} title="Envoyer les retards ?" description={`${todo.length} retard(s) seront enregistrés.`} busy={loading} onCancel={() => setConfirmSend(false)} onConfirm={handleConfirmSend} confirmLabel="Envoyer" />
+      <ConfirmDialog open={pendingDelete !== null} title="Supprimer cette ligne ?" description="Ce retard sera retiré de la liste avant l'envoi." onCancel={() => setPendingDelete(null)} onConfirm={() => pendingDelete !== null && supp(pendingDelete)} confirmLabel="Supprimer" />
       <div className="text-center m-5 text-4xl sm:text-5xl">
         <h1>Ajouter un retard</h1>
       </div>
-      <div className="grid grid-cols-4 mt-4 text-3xl sm:text-4xl">
+      <div className="grid grid-cols-1 gap-2 mt-4 text-xl sm:grid-cols-2 sm:text-2xl lg:grid-cols-4 lg:text-3xl">
         <div className="m-2 mr-5 ">
           <select
             name=""
@@ -164,7 +181,7 @@ const Retard = () => {
                   <td className="p-3 px-5">{todo.minutes}</td>
                   <td>
                     <button
-                      onClick={() => supp(todo.id)}
+                      onClick={() => setPendingDelete(todo.id)}
                       type="button"
                       className="text-sm cursor-pointer bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline"
                     >
@@ -179,6 +196,7 @@ const Retard = () => {
       </div>
       <button
         onClick={handleSubmit}
+        disabled={loading || !todo.length}
         className="border rounded-lg text-gray-600 bg-green-300 hover:bg-green-600 dark:text-gray-50 hover:text-slate-950
       text-3xl m-5 p-5"
       >

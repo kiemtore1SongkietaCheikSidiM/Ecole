@@ -4,12 +4,15 @@ import { TfiClose } from "react-icons/tfi";
 import type { EleveType, classetype } from "../../Declarations/Types/typage";
 import React, { useState } from "react";
 import { handleSubmit } from "../../Declarations/Constant/Register";
+import ConfirmDialog from "../../Components/Utiles/ConfirmDialog";
 
 const Register = () => {
   const [fonction, setfonction] = useState<string>("");
   const [Nom, setNom] = useState<string>("");
   const [prenom, setPrenom] = useState<string>("");
   const [succes, setSucces] = useState<boolean>(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState<string>("");
   const [tel, setTel] = useState<string>("");
   const [nommanquand, setNomManquand] = useState<boolean>(false);
@@ -51,8 +54,25 @@ const Register = () => {
     ]);
   };
 
+  const handleRegister = async () => {
+    setLoading(true);
+    try {
+      await handleSubmit({
+        Nom, prenom, email, tel, fonction, succes, nommanquand, prenommanquand,
+        emailmanquand, telmanquand, fonctionmanquand, setfonction, setNom,
+        setPrenom, setEmail, setTel, setSucces, setNomManquand, setPrenomManquand,
+        setEmailManquand, setTelManquand, setFonctionManquand, classe, setClasse,
+        eleve, setEleve,
+      });
+    } finally {
+      setLoading(false);
+      setConfirmOpen(false);
+    }
+  };
+
   return (
     <div className="bg-slate-100 dark:border-slate-800 dark:bg-slate-800 overflow-x-hidden">
+      <ConfirmDialog open={confirmOpen} title="Créer cet utilisateur ?" description="Les informations saisies seront envoyées et un compte sera créé." busy={loading} onCancel={() => setConfirmOpen(false)} onConfirm={handleRegister} confirmLabel="Créer le compte" />
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         {succes && (
           <div className="mt-10">
@@ -329,40 +349,9 @@ const Register = () => {
             <button
               onClick={(e: React.FormEvent) => {
                 e.preventDefault();
-                handleSubmit({
-                  Nom,
-                  prenom,
-                  email,
-                  tel,
-                  fonction,
-
-                  succes,
-                  nommanquand,
-                  prenommanquand,
-                  emailmanquand,
-                  telmanquand,
-                  fonctionmanquand,
-
-                  setfonction,
-                  setNom,
-                  setPrenom,
-                  setEmail,
-                  setTel,
-                  setSucces,
-
-                  setNomManquand,
-                  setPrenomManquand,
-                  setEmailManquand,
-                  setTelManquand,
-                  setFonctionManquand,
-
-                  classe,
-                  setClasse,
-
-                  eleve,
-                  setEleve,
-                });
+                setConfirmOpen(true);
               }}
+              disabled={loading}
               className="text-3xl border text-slate-800 cursor-pointer rounded-lg bg-blue-500 m-5 hover:bg-blue-700"
             >
               Envoyer
