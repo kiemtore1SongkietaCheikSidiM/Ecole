@@ -295,13 +295,25 @@ def notify_users_of_event(sender, instance, created, **kwargs):
     if not created:
         return
     for user in Utilisateur.objects.filter(is_active=True):
-        Notification.objects.create(
+        notification = Notification.objects.create(
             utilisateur=user,
             type='EVENEMENT',
             titre=instance.titre,
             contenu=instance.contenu,
             data={'evenement_id': instance.id, 'date': instance.date.isoformat()},
         )
+        from .realtime import publish_user_event
+        publish_user_event(user.id, {
+            'type': 'evenement',
+            'evenement': {
+                'id': instance.id,
+                'date': instance.date.isoformat(),
+                'titre': instance.titre,
+                'contenu': instance.contenu,
+                'created_at': instance.created_at.isoformat(),
+            },
+            'notification_id': notification.id,
+        })
         if user.email:
             send_mail(
                 subject=instance.titre,

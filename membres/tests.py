@@ -433,6 +433,18 @@ class DirectoryEndpointTests(TestCase):
 
         self.assertEqual(response.status_code, 400)
 
+    def test_analysis_routes_are_available_to_authenticated_parent(self):
+        client = APIClient()
+        client.force_authenticate(user=self.parent)
+
+        statistics = client.get('/api/parent/statistiques/')
+        ai_analysis = client.get('/api/parent/analyse-ia/')
+
+        self.assertEqual(statistics.status_code, 200)
+        self.assertEqual(ai_analysis.status_code, 200)
+        self.assertIn('global', statistics.data)
+        self.assertIn('analyse_ia', ai_analysis.data)
+
 
 class MessagingEndpointTests(TestCase):
     def setUp(self):

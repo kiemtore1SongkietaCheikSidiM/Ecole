@@ -17,12 +17,14 @@ DEBUG = os.getenv('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
     'corsheaders',
     'rest_framework',
     'membres',
@@ -57,6 +59,20 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Taslim.wsgi.application'
+ASGI_APPLICATION = 'Taslim.asgi.application'
+
+CHANNEL_LAYER_BACKEND = os.getenv(
+    'CHANNEL_LAYER_BACKEND',
+    'channels.layers.InMemoryChannelLayer',
+)
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': CHANNEL_LAYER_BACKEND,
+        'CONFIG': {} if CHANNEL_LAYER_BACKEND.endswith('InMemoryChannelLayer') else {
+            'hosts': [os.getenv('CHANNEL_REDIS_URL', 'redis://127.0.0.1:6379/0')],
+        },
+    },
+}
 
 DATABASES = {
     'default': {

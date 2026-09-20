@@ -20,7 +20,7 @@ from django.contrib import admin
 from django.urls import path
 from django.http import JsonResponse
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from membres.views import admin_users, class_list, class_options, class_timetable, click_notification, create_absences, create_retards, devoir_history, evenements, forgot_password, login_user, me, message_contacts, message_conversation, messages, notifications, parent_bulletins, parent_grades, parent_timetables, parents_with_students, register_user, scan_bulletin_pdf, scan_class, scan_devoir_files, scan_timetable_files, teacher_classes, teacher_students, timetables, update_profile
+from membres.views import admin_users, class_list, class_options, class_timetable, click_notification, create_absences, create_retards, devoir_history, evenements, forgot_password, login_user, me, message_contacts, message_conversation, messages, notifications, parent_bulletins, parent_grades, parent_timetables, parents_with_students, performance_ai_analysis, performance_statistics, register_user, scan_bulletin_pdf, scan_class, scan_devoir_files, scan_timetable_files, teacher_classes, teacher_students, timetables, update_profile
 
 
 def health_check(request):
@@ -41,6 +41,8 @@ urlpatterns = [
     path('api/devoirs/', devoir_history, name='devoir_history'),
     path('api/parent/notes/', parent_grades, name='parent_grades'),
     path('api/parent/bulletins/', parent_bulletins, name='parent_bulletins'),
+    path('api/parent/statistiques/', performance_statistics, name='performance_statistics'),
+    path('api/parent/analyse-ia/', performance_ai_analysis, name='performance_ai_analysis'),
     path('api/parent/emplois-du-temps/', parent_timetables, name='parent_timetables'),
     path('api/devoirs/scanner/', scan_devoir_files, name='scan_devoir_files'),
     path('api/documents/devoirs/', devoir_history, name='document_devoir_history'),

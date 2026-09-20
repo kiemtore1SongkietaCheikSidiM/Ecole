@@ -17,6 +17,9 @@ Le backend est construit avec Django, Django REST Framework, JWT et PostgreSQL.
 - Messagerie texte, audio et URL media.
 - Evenements crees par l'administration.
 - Notifications dans l'application.
+- Notifications temps reel par WebSocket pour les messages et les evenements.
+- Analyse statistique des resultats par eleve, matiere et trimestre.
+- Analyse explicable des performances avec recommandations indicatives hors ligne.
 - Emails automatiques pour les absences, retards, devoirs et evenements.
 - Interface d'administration Django.
 
@@ -35,6 +38,11 @@ Django/
 |-- membres/
 |   |-- models.py                 Modele de donnees et signal d'evenement
 |   |-- views.py                  Endpoints REST et logique applicative
+|   |-- consumers.py              Consumer WebSocket des notifications
+|   |-- jwt_middleware.py         Authentification JWT des WebSockets
+|   |-- routing.py                Routes WebSocket Channels
+|   |-- statistical_analysis.py   Calcul des statistiques de resultats
+|   |-- performance_ai.py         Analyse explicable des performances
 |   |-- admin.py                  Configuration de l'interface admin
 |   |-- permissions.py             Permissions par role reutilisables
 |   |-- bulletin_scanner.py        Extraction PDF/OCR des bulletins
@@ -316,10 +324,18 @@ A la creation, le parent recoit une notification dans l'application et un email 
 | POST | `/api/devoirs/scanner/` | Importe et analyse des devoirs PDF |
 | GET | `/api/parent/notes/` | Notes des enfants groupees par trimestre |
 | GET | `/api/parent/bulletins/` | Bulletins du parent |
+| GET | `/api/parent/statistiques/` | Statistiques des resultats visibles |
+| GET | `/api/parent/analyse-ia/` | Analyse indicative des performances |
 | POST | `/api/bulletins/scanner/` | Analyse un bulletin sans l'enregistrer |
 | GET | `/api/documents/devoirs/` | Alias de l'historique des devoirs |
 
 Les fichiers sont envoyes en `multipart/form-data`. Le champ accepte notamment `devoirs`, `devoir`, `fichier` ou `file`.
+
+Les routes d'analyse acceptent `trimestre=1|2|3` et `eleve_id` en parametres
+facultatifs. Elles appliquent les memes regles de visibilite que les notes.
+Les statistiques retournent moyenne, mediane, ecart-type, minimum, maximum et
+taux de reussite. L'analyse IA est deterministe, fonctionne sans service
+externe et reste indicative.
 
 Un devoir nouvellement enregistre genere une notification et un email pour le parent de l'eleve. Une mise a jour du meme devoir ne genere pas de doublon de notification.
 

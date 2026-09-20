@@ -24,6 +24,8 @@ from django.utils.dateparse import parse_date
 
 from .bulletin_scanner import scan_bulletin
 from .models import Absence, Classe, Devoir, Eleve, EmploiDuTemps, Evenement, MATIERE_CHOICES, Message, NIVEAUX_SECONDAIRE, NIVEAU_CHOICES, Notification, Retard
+from .performance_ai import generate_performance_analysis
+from .statistical_analysis import analyse_records, records_for_student
 from .timetable_scanner import scan_timetable
 
 User = get_user_model()
@@ -105,13 +107,19 @@ def _message_data(message, current_user):
 
 def _create_notification(user, notification_type, title, content='', data=None):
     """Cree une notification persistante pour un seul utilisateur."""
-    return Notification.objects.create(
+    notification = Notification.objects.create(
         utilisateur=user,
         type=notification_type,
         titre=title,
         contenu=content,
         data=data or {},
     )
+    from .realtime import publish_user_event
+    publish_user_event(user.id, {
+        'type': 'notification',
+        'notification': _notification_data(notification),
+    })
+    return notification
 
 
 def _notify_student_parent(student, notification_type, title, content='', data=None):
@@ -669,6 +677,75 @@ def parent_bulletins(request):
         'trimestre': trimester_filter,
         'bulletins': bulletins,
         'eleves': bulletins,
+    })
+
+
+def _analysis_records(request, trimester_filter=None):
+    records = Devoir.objects.filter(
+        _visible_student_filter(request.user, 'eleve__'),
+    ).select_related('eleve').order_by('date', 'id')
+    if trimester_filter is not None:
+        records = records.filter(trimestre=trimester_filter)
+    return list(records)
+
+
+def _requested_student(records, raw_student_id):
+    if raw_student_id is None:
+        return None, None
+    try:
+        student_id = int(raw_student_id)
+    except (TypeError, ValueError):
+        return None, Response({'success': False, 'message': "L'identifiant de l'élève est invalide."}, status=status.HTTP_400_BAD_REQUEST)
+    student_records = records_for_student(records, student_id)
+    student = Eleve.objects.filter(pk=student_id).first()
+    if student is None or not student_records:
+        return None, Response({'success': False, 'message': "Élève introuvable ou sans résultat visible."}, status=status.HTTP_404_NOT_FOUND)
+    return student, None
+
+
+def _performance_statistics_response(request):
+    trimester_filter = None
+    if request.query_params.get('trimestre') is not None:
+        trimester_filter = _requested_trimester(request.query_params.get('trimestre'))
+        if trimester_filter is None:
+            return Response({'success': False, 'message': 'Le trimestre doit être 1, 2 ou 3.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    records = _analysis_records(request, trimester_filter)
+    student, error = _requested_student(records, request.query_params.get('eleve_id'))
+    if error:
+        return error
+    if student is not None:
+        records = records_for_student(records, student.id)
+    result = analyse_records(records)
+    result.update({
+        'success': True,
+        'trimestre': trimester_filter,
+        'eleve': {'id': student.id, 'nom': student.nom, 'prenom': student.prenom, 'classe': student.classe} if student else None,
+    })
+    return Response(result)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def performance_statistics(request):
+    """Retourne les indicateurs statistiques des devoirs visibles."""
+    return _performance_statistics_response(request)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def performance_ai_analysis(request):
+    """Retourne une analyse explicable et indicative des performances."""
+    statistics_response = _performance_statistics_response(request)
+    if statistics_response.status_code != status.HTTP_200_OK:
+        return statistics_response
+    data = statistics_response.data
+    return Response({
+        'success': True,
+        'trimestre': data['trimestre'],
+        'eleve': data['eleve'],
+        'statistiques': data,
+        'analyse_ia': generate_performance_analysis(data),
     })
 
 
