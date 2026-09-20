@@ -13,6 +13,7 @@ import axios from "axios"
 import type { ChatMessage, Contacttype } from "../Declarations/Types/typage"
 import {  URL } from "../Declarations/Constant/constant"
 import { formatFrenchDate, formatHour, getCurrentUser, getMessageDate, getUserDisplayName, normalizeContacts, normalizeMessages, resolveMediaUrl } from "../Declarations/Constant/Fonction"
+import { useRealtime } from "../Declarations/Realtime"
 
 
 const access_token = localStorage.getItem("access_token")
@@ -29,6 +30,7 @@ const Message = ({ sidebarcollaps }: Search) => {
   const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
+  const { lastMessage } = useRealtime()
 
   const Mettre = (items: Contacttype) => {
     setSelectedContact(items)
@@ -161,6 +163,25 @@ const Message = ({ sidebarcollaps }: Search) => {
       fetchMessages(identifiant)
     }
   }, [identifiant])
+
+  useEffect(() => {
+    if (!lastMessage || !selectedcontact) return
+
+    const relatedContactId = lastMessage.sender_id ?? lastMessage.auteur_id ?? lastMessage.emetteur_id ?? lastMessage.sender?.id
+    const recipientId = lastMessage.destinataire_id ?? lastMessage.recipient?.id
+    const belongsToConversation = String(relatedContactId) === String(selectedcontact.id)
+      || String(recipientId) === String(selectedcontact.id)
+
+    if (!belongsToConversation) return
+
+    setMessages((current) => {
+      if (lastMessage.id !== undefined && current.some((item) => item.id === lastMessage.id)) {
+        return current
+      }
+
+      return [...current, lastMessage].sort((a, b) => getMessageDate(a) - getMessageDate(b))
+    })
+  }, [lastMessage, selectedcontact])
 
   const filtre = amis.filter((items) => `${items.nom ?? ""} ${items.prenom ?? ""}`.toLowerCase().includes(search.toLowerCase()))
 

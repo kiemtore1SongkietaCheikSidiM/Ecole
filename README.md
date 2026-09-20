@@ -30,3 +30,41 @@ If you are developing a production application, we recommend enabling type-aware
 ```
 
 See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+
+## WebSocket temps reel
+
+Le frontend ouvre une connexion WebSocket apres authentification avec `VITE_WS_URL`.
+Par defaut, cette valeur est `ws://127.0.0.1:8000/ws/notifications/`. Le token JWT est
+transmis dans le parametre `token` de l'URL, car le navigateur ne permet pas d'ajouter
+un header HTTP personnalise pendant le handshake WebSocket.
+
+Le backend peut envoyer une notification avec :
+
+```json
+{
+  "type": "notification",
+  "notification": {
+    "id": 42,
+    "type": "EVENEMENT",
+    "category": "SCHOOL"
+  }
+}
+```
+
+Et un nouveau message avec :
+
+```json
+{
+  "type": "message",
+  "message": {
+    "id": 43,
+    "sender_id": 7,
+    "destinataire_id": 12,
+    "contenu": "Bonjour",
+    "created_at": "2026-09-17T10:30:00Z"
+  }
+}
+```
+
+Les événements peuvent aussi utiliser `event` à la place de `type`, et `data` à la
+place de `notification` ou `message`.

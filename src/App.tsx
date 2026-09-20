@@ -27,6 +27,7 @@ import BulletinEleve from './Pages/Parent/BulletinEleve'
 import { ProtectedRoute } from './Declarations/Constant/ProtectedRoutes'
 import Emploi_du_temps from './Pages/Directeur/Emploi_du_temps'
 import Fichierdevoir from './Pages/Enseignant/Fichierdevoir'
+import { RealtimeProvider } from './Declarations/Realtime' 
 
 const RoleSettingsLayout = () => {
   const storedUser = JSON.parse(localStorage.getItem('user') || 'null')
@@ -49,8 +50,9 @@ const RoleSettingsLayout = () => {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
+    <RealtimeProvider>
+      <BrowserRouter>
+        <Routes>
         {/* Chemin public accessible par tous/ Public routes that anayone can access */}
         <Route path='/login' element={<Login/>}/>
         <Route path='/' element={<Accueil/>}/>
@@ -109,8 +111,9 @@ function App() {
           <Route path='/enseignant/confidentialite' element={<Setting/>}/>
           <Route path='/enseignant/telechargement' element={<Setting/>}/>
         </Route>
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </RealtimeProvider>
   )
 }
 

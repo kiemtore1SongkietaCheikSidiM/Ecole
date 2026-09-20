@@ -8,6 +8,22 @@ import { FaMessage } from "react-icons/fa6";
 import { accessToken, MessageCount } from "../../Declarations/Constant/Fonction";
 import api from "../../Declarations/Api";
 import type { NotificationItem, NotificationsResponse } from "../../Declarations/Types/Interface";
+import { useRealtime } from "../../Declarations/Realtime";
+
+const notificationItems = (data: unknown): NotificationItem[] => {
+  if (Array.isArray(data)) {
+    return data as NotificationItem[];
+  }
+
+  if (data && typeof data === "object") {
+    const payload = data as Record<string, unknown>;
+    const collection = payload.notifications ?? payload.results ?? payload.data ?? payload.items;
+
+    return Array.isArray(collection) ? collection as NotificationItem[] : [];
+  }
+
+  return [];
+};
 
 const Notification = () => {
   const [activepanel, setActivePanel] = useState<Panel>(null);
@@ -22,6 +38,7 @@ const Notification = () => {
 
   const [notificationCount, setNotificationCount] = useState(0);
   const [messageCount, setMessageCount] = useState(0);
+  const { lastNotification } = useRealtime();
 
   const handlepanel = (panel: Panel) => {
     setActivePanel((current) => (current === panel ? null : panel));
@@ -45,8 +62,12 @@ const Notification = () => {
         const response = await api.get(
           `/api/notifications/?type=MESSAGE`
         );
-        setMessageNotifications(response.data);
-        setMessageCount(response.data.unread_count);
+        setMessageNotifications(notificationItems(response.data));
+        setMessageCount(
+          typeof response.data?.unread_count === "number"
+            ? response.data.unread_count
+            : 0,
+        );
       } catch (error: any) {
         console.log(error.response?.data);
       }
@@ -56,7 +77,7 @@ const Notification = () => {
         const response = await api.get(
           `/api/notifications/?type=${types}`,
         );
-        setValue(response.data);
+        setValue(notificationItems(response.data));
       } catch (error: any) {
         console.log(error.response?.data);
       }
@@ -73,7 +94,7 @@ const Notification = () => {
         );
 
         const data = response.data;
-        setMessageNotifications(data.message_notifications);
+        setMessageNotifications(notificationItems(data.message_notifications));
         setNotificationCount(data.unread_count);
         setMessageCount(data.message_count);
       } catch (error: any) {
@@ -102,6 +123,38 @@ const Notification = () => {
       document.removeEventListener("mousedown", handclikOutside);
     };
   }, [accessToken]);
+
+  useEffect(() => {
+    if (!lastNotification) return;
+
+    const addOnce = (setValue: React.Dispatch<React.SetStateAction<NotificationItem[]>>) => {
+      setValue((current) => current.some((item) => item.id === lastNotification.id)
+        ? current
+        : [lastNotification, ...current]);
+    };
+
+    if (lastNotification.type === "MESSAGE" || lastNotification.category === "MESSAGE") {
+      addOnce(setMessageNotifications);
+      setMessageCount((count) => count + 1);
+      return;
+    }
+
+    setNotificationCount((count) => count + 1);
+    switch (lastNotification.type) {
+      case "ABSENCE":
+        addOnce(setAbsence);
+        break;
+      case "RETARD":
+        addOnce(setRetard);
+        break;
+      case "DEVOIR":
+        addOnce(setDevoir);
+        break;
+      case "EVENEMENT":
+        addOnce(setEvenement);
+        break;
+    }
+  }, [lastNotification]);
   return (
     <div ref={containerref} className="relative z-100">
       <div className="flex space-x-3">

@@ -68,7 +68,7 @@ const Login = () => {
                 className="mt-10 text-center 
           font-lora text-3xl font-bold tracking-tight text-slate-600 dark:text-slate-300"
               >
-                Connectez-vous
+                {loading ? "Patienter" : "Connectez-vous"}
               </h2>
             </div>
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
