@@ -14,7 +14,12 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = os.getenv('SECRET_KEY', 'dzfx7(4)w3)if9@l4+2&5z7l!w^_p0cv^%)$yzzgz3vqdu_upp')
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
+ALLOWED_HOSTS = [
+    'localhost', 
+    '127.0.0.1', 
+    '[::1]',
+    '192.168.1.71'
+    ]
 
 INSTALLED_APPS = [
     'daphne',
@@ -117,6 +122,10 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:5173',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
+    'http://localhost:8081',
+    'http://192.168.1.87',
+    'http://192.168.1.87:8000',
+    'http://192.168.1.87:8000'
 ]
 
 CORS_ALLOW_CREDENTIALS = True

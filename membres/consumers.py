@@ -14,7 +14,7 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
         print("================================")
 
         if not user or not user.is_authenticated:
-            print("❌ WEBSOCKET REFUSÉ")
+            print(" WEBSOCKET REFUSÉ")
             await self.close(code=4401)
             return
 
@@ -27,7 +27,7 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
 
         await self.accept()
 
-        print("✅ WEBSOCKET ACCEPTÉ")
+        print("WEBSOCKET ACCEPTÉ")
 
     async def disconnect(self, close_code):
 
